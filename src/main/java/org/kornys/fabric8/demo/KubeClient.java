@@ -14,13 +14,10 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 
 public class KubeClient {
-    private static Logger log = LoggerFactory.getLogger(KubeClient.class);
-    private final Config build = new ConfigBuilder().withMasterUrl(Environment.getInstance().getUrl())
-            .withOauthToken(Environment.getInstance().getToken())
-            .build();
     private KubernetesClient client;
+    private static KubeClient instance;
 
-    public KubeClient() {
+    private KubeClient() {
         Config config = new ConfigBuilder().withMasterUrl(Environment.getInstance().getUrl())
                 .withOauthToken(Environment.getInstance().getToken())
                 .build();
@@ -28,6 +25,13 @@ public class KubeClient {
         OkHttpClient httpClient = HttpClientUtils.createHttpClient(config);
         httpClient = httpClient.newBuilder().protocols(Collections.singletonList(Protocol.HTTP_1_1)).build();
         client = new DefaultOpenShiftClient(httpClient, new OpenShiftConfig(config));
+    }
+
+    public static synchronized KubeClient getInstance() {
+        if (instance == null) {
+            instance = new KubeClient();
+        }
+        return instance;
     }
 
     public KubernetesClient getClient() {

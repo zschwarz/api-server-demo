@@ -9,7 +9,7 @@ class ResourceTest {
 
     @Test
     void testGetPods() {
-        KubeClient kube = new KubeClient();
+        KubeClient kube = KubeClient.getInstance();
         kube.getClient().pods().inAnyNamespace().list().getItems().forEach(pod -> LOGGER.info(pod.getMetadata().getName()));
     }
 }
