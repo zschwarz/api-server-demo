@@ -1,0 +1,13 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: api-server-demo
+spec:
+  rules:
+    - host: api-server-demo.<ip-addr>.nip.io
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: api-server-demo
+              servicePort: 8899

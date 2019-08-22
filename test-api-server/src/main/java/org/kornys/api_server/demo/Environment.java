@@ -1,4 +1,4 @@
-package org.kornys.fabric8.demo;
+package org.kornys.api_server.demo;
 
 import io.fabric8.kubernetes.client.Config;
 import org.slf4j.Logger;
@@ -14,7 +14,7 @@ public class Environment {
 
     private Environment() {
         if (token == null || url == null) {
-            Config config = Config.autoConfigure(System.getenv().getOrDefault("TEST_CLUSTER_CONTEXT", null));
+            Config config = Config.autoConfigure(System.getenv().getOrDefault("KUBERNETES_CONTEXT", null));
             token = config.getOauthToken();
             url = config.getMasterUrl();
         }
@@ -24,22 +24,22 @@ public class Environment {
         LOGGER.info(debugFormat, "KUBERNETES_NAMESPACE", namespace);
     }
 
-    public static synchronized Environment getInstance() {
+    static synchronized Environment getInstance() {
         if (instance == null) {
             instance = new Environment();
         }
         return instance;
     }
 
-    public String getToken() {
+    String getToken() {
         return token;
     }
 
-    public String getUrl() {
+    String getUrl() {
         return url;
     }
 
-    public String getNamespace() {
+    String getNamespace() {
         return namespace;
     }
 }

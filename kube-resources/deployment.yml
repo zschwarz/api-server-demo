@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-server-demo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: api-server-demo
+  template:
+    metadata:
+      labels:
+        app: api-server-demo
+    spec:
+      containers:
+        - name: api-server-demo
+          image: docker.io/kornysd/api-server-demo:latest
+          ports:
+            - containerPort: 8899

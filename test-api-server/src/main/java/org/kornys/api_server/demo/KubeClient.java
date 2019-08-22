@@ -1,4 +1,4 @@
-package org.kornys.fabric8.demo;
+package org.kornys.api_server.demo;
 
 import io.fabric8.kubernetes.client.Config;
 import io.fabric8.kubernetes.client.ConfigBuilder;
@@ -8,12 +8,10 @@ import io.fabric8.openshift.client.DefaultOpenShiftClient;
 import io.fabric8.openshift.client.OpenShiftConfig;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 
-public class KubeClient {
+class KubeClient {
     private KubernetesClient client;
     private static KubeClient instance;
 
@@ -27,14 +25,14 @@ public class KubeClient {
         client = new DefaultOpenShiftClient(httpClient, new OpenShiftConfig(config));
     }
 
-    public static synchronized KubeClient getInstance() {
+    static synchronized KubeClient getInstance() {
         if (instance == null) {
             instance = new KubeClient();
         }
         return instance;
     }
 
-    public KubernetesClient getClient() {
+    KubernetesClient getClient() {
         return client;
     }
 }
