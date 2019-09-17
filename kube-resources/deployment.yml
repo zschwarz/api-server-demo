@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
         - name: api-server-demo
-          image: docker.io/kornysd/api-server-demo:latest
+          image: docker.io/zschwarz/api-server-demo:latest
           ports:
             - containerPort: 8899

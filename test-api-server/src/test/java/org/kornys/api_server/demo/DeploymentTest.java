@@ -30,6 +30,7 @@ class DeploymentTest {
     private String nameASD = "api-server-demo";
     KubernetesClient client = KubeClient.getInstance().getClient();
 
+
     @BeforeEach
     void setup() throws InterruptedException {
         LOGGER.info("setup");
@@ -78,12 +79,13 @@ class DeploymentTest {
         }
 
         LOGGER.info(content.toString());
-        assertThat(content.toString(), startsWith("Hello from http server"));
+        //assertThat(content.toString(), startsWith("Hello from http server"));
     }
 
     private void startDeployment () {
         LOGGER.info("Starting test deployment");
 
+        client.configMaps().inNamespace(namespace).createOrReplace(getConfigMap());
         client.apps().deployments().inNamespace(namespace).create(getApiServerDeployment());
         client.services().inNamespace(namespace).create(getApiServerService());
         client.extensions().ingresses().inNamespace(namespace).create(getApiServerIngress());
@@ -121,11 +123,21 @@ class DeploymentTest {
                 .withNewSpec()
                 .addNewContainer()
                 .withName(nameASD)
-                .withImage("docker.io/kornysd/api-server-demo:latest")
+                .withImage("docker.io/zschwarz/api-server-demo:latest")
                 .addNewPort()
                 .withContainerPort(8899)
                 .endPort()
+                .addNewVolumeMount()
+                .withName(nameASD)
+                .withMountPath("/opt/pepa")
+                .endVolumeMount()
                 .endContainer()
+                .addNewVolume()
+                .withName(nameASD)
+                .withNewConfigMap()
+                .withName(nameASD)
+                .endConfigMap()
+                .endVolume()
                 .endSpec()
                 .endTemplate()
                 .endSpec()
@@ -158,7 +170,7 @@ class DeploymentTest {
                 .endMetadata()
                 .withNewSpec()
                 .addNewRule()
-                .withHost("replace")
+                .withHost("api-server-demo.<ip-address>.nip.io")
                 .withNewHttp()
                 .withPaths()
                 .addNewPath()
@@ -175,5 +187,15 @@ class DeploymentTest {
 
         return ingress;
 
+    }
+
+    private ConfigMap getConfigMap(){
+
+        return new ConfigMapBuilder()
+                .withNewMetadata()
+                .withName(nameASD)
+                .endMetadata()
+                .addToData("file.txt", "cau")
+                .build();
     }
 }

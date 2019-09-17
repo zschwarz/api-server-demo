@@ -4,7 +4,7 @@ metadata:
   name: api-server-demo
 spec:
   rules:
-    - host: replace
+    - host: api-server-demo.<ip-address>.nip.io
       http:
         paths:
           - path: /

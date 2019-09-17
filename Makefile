@@ -1,6 +1,6 @@
 VERSION     ?= 1.0-SNAPSHOT
 SKIP_TESTS  ?= true
-DOCKER_ORG	?= docker.io/kornysd
+DOCKER_ORG	?= docker.io/zschwarz
 TAG ?= latest
 MAVEN_ARGS="-DskipTests"
 
